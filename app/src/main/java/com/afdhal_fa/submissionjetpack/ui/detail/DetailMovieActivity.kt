@@ -37,7 +37,7 @@ class DetailMovieActivity : AppCompatActivity() {
             val position = extras.getString(EXTRA_POSITION)
             if (movieId != null && position != null) {
                 vModel.setSelectedMovie(movieId, position)
-                setMovie(vModel.getMovie(applicationContext))
+                setMovie(vModel.getMovie())
             }
         }
     }
@@ -47,7 +47,7 @@ class DetailMovieActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
 
-        val imageResource: Int = getResources()
+        val imageResource: Int = resources
             .getIdentifier(movieEntity.poster, null, packageName)
         Glide.with(this)
             .load(imageResource)

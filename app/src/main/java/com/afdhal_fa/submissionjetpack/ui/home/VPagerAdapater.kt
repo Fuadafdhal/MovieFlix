@@ -5,19 +5,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.afdhal_fa.submissionjetpack.model.VPager
+import com.afdhal_fa.submissionjetpack.utils.Constants
 
 
 @Suppress("DEPRECATION")
 class VPagerAdapater(private val fragment: List<VPager>, fm: FragmentManager) :
-    FragmentPagerAdapter(fm) {
+    FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     var _Data1: String? = null
     var _Data2: String? = null
 
     override fun getItem(position: Int): Fragment {
         val mBundle = Bundle()
-        mBundle.putString("VPAGER_DATA1", getData1())
-        mBundle.putString("VPAGER_DATA2", getData2())
+        mBundle.putString(Constants.VPAGER_DATA1, getData1())
+        mBundle.putString(Constants.VPAGER_DATA2, getData2())
 
         fragment[position].fragment.arguments = mBundle
 

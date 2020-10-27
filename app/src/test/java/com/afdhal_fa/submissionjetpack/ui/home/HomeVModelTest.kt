@@ -1,7 +1,5 @@
 package com.afdhal_fa.submissionjetpack.ui.home
 
-import android.app.Application
-import android.content.Context
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import org.junit.Before
@@ -9,7 +7,6 @@ import org.junit.Test
 
 class HomeVModelTest {
     private lateinit var viewModel: HomeVModel
-    private lateinit var context: Context
 
     @Before
     fun setUp() {
@@ -19,12 +16,15 @@ class HomeVModelTest {
 
     @Test
     fun getMovies() {
-//        val courseEntities = viewModel.getMovies(context)
-//        assertNotNull(courseEntities)
-//        assertEquals(5, courseEntities.size)
+        val movieEntities = viewModel.getMovies()
+        assertNotNull(movieEntities)
+        assertEquals(10, movieEntities.size)
     }
 
     @Test
     fun getTVShow() {
+        val movieEntities = viewModel.getTVShow()
+        assertNotNull(movieEntities)
+        assertEquals(11, movieEntities.size)
     }
 }

@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.afdhal_fa.submissionjetpack.R
 import com.afdhal_fa.submissionjetpack.ui.home.HomeAdapter
 import com.afdhal_fa.submissionjetpack.ui.home.HomeVModel
-import kotlinx.android.synthetic.main.fragment_movie.*
-import kotlin.math.log
+import com.afdhal_fa.submissionjetpack.utils.Constants
+import kotlinx.android.synthetic.main.fragment_tv_show.*
 
 class TVShowFragment : Fragment() {
 
@@ -19,7 +19,7 @@ class TVShowFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_movie, container, false)
+        return inflater.inflate(R.layout.fragment_tv_show, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,8 +31,8 @@ class TVShowFragment : Fragment() {
                 ViewModelProvider.NewInstanceFactory()
             )[HomeVModel::class.java]
 
-            val mTVShows = viewModle.getTVShow(requireContext())
-            val postion = arguments?.getString("VPAGER_DATA2") as String
+            val mTVShows = viewModle.getTVShow()
+            val postion = arguments?.getString(Constants.VPAGER_DATA2) as String
             println(postion)
 
 
@@ -40,7 +40,7 @@ class TVShowFragment : Fragment() {
             tvShowAdapter.setMovie(mTVShows)
             tvShowAdapter.setPosition(postion)
 
-            with(recycleview) {
+            with(recycleview_tv_show) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
                 adapter = tvShowAdapter

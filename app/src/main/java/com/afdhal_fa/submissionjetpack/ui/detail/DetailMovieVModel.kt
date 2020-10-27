@@ -1,6 +1,5 @@
 package com.afdhal_fa.submissionjetpack.ui.detail
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.afdhal_fa.submissionjetpack.model.MovieEntity
 import com.afdhal_fa.submissionjetpack.utils.DataDummy
@@ -15,10 +14,10 @@ class DetailMovieVModel : ViewModel() {
         this.type = type
     }
 
-    fun getMovie(context: Context): MovieEntity {
+    fun getMovie(): MovieEntity {
         lateinit var mMovies: MovieEntity
         val movieEntities =
-            if (type.equals("movies")) DataDummy.generateDummyMovie(context) else DataDummy.generateDummyTVShow(context)
+            if (type == "movies") DataDummy.generateDummyMovie() else DataDummy.generateDummyTVShow()
         for (mMoviesEntity in movieEntities) {
             if (mMoviesEntity.id == movieId) {
                 mMovies = mMoviesEntity

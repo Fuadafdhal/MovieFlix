@@ -31,7 +31,7 @@ class MovieFragment : Fragment() {
                 ViewModelProvider.NewInstanceFactory()
             )[HomeVModel::class.java]
 
-            val mMovies = viewModle.getMovies(requireContext())
+            val mMovies = viewModle.getMovies()
             val postion = arguments?.getString("VPAGER_DATA1") as String
             println(postion)
 

@@ -29,7 +29,7 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.VHolder>() {
     inner class VHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(mMovieEntity: MovieEntity) {
             val imageResource: Int =
-                itemView.getResources()
+                itemView.resources
                     .getIdentifier(mMovieEntity.poster, null, itemView.context.packageName)
 
             with(itemView) {
