@@ -9,7 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afdhal_fa.submissionjetpack.R
 import com.afdhal_fa.submissionjetpack.ui.home.HomeAdapter
-import com.afdhal_fa.submissionjetpack.ui.home.HomeVModel
+import com.afdhal_fa.submissionjetpack.utils.Constants
+import com.afdhal_fa.submissionjetpack.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_movie.*
 
 class MovieFragment : Fragment() {
@@ -26,19 +27,21 @@ class MovieFragment : Fragment() {
 
         if (activity != null) {
 
-            val viewModle = ViewModelProvider(
-                this,
-                ViewModelProvider.NewInstanceFactory()
-            )[HomeVModel::class.java]
 
-            val mMovies = viewModle.getMovies()
-            val postion = arguments?.getString("VPAGER_DATA1") as String
-            println(postion)
+            val factory = ViewModelFactory.getInstance(requireActivity())
+            val viewModle = ViewModelProvider(this, factory)[MovieVModel::class.java]
 
-
+            val postion = arguments?.getString(Constants.VPAGER_DATA1) as String
             val movieAdapter = HomeAdapter()
-            movieAdapter.setMovie(mMovies)
-            movieAdapter.setPosition(postion)
+
+            progress_bar.visibility = View.VISIBLE
+            viewModle.getMovies().observe(viewLifecycleOwner, {
+                progress_bar.visibility = View.GONE
+                movieAdapter.setMovie(it)
+                movieAdapter.setPosition(postion)
+                movieAdapter.notifyDataSetChanged()
+            })
+
             with(recycleview) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)

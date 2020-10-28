@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.afdhal_fa.submissionjetpack.R
-import com.afdhal_fa.submissionjetpack.model.MovieEntity
+import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
 import com.afdhal_fa.submissionjetpack.ui.detail.DetailMovieActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions

@@ -33,8 +33,7 @@ class HomeActivityTest {
     fun loadDetailMovie() {
         Espresso.onView(withId(R.id.recycleview)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                0,
-                ViewActions.click()
+                0, ViewActions.click()
             )
         )
 

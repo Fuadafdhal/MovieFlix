@@ -1,10 +1,12 @@
 package com.afdhal_fa.submissionjetpack.ui.detail
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.afdhal_fa.submissionjetpack.R
-import com.afdhal_fa.submissionjetpack.model.MovieEntity
+import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
+import com.afdhal_fa.submissionjetpack.viewmodel.ViewModelFactory
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.activity_detail.*
@@ -21,10 +23,8 @@ class DetailMovieActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
 
 
-        val vModel = ViewModelProvider(
-            this,
-            ViewModelProvider.NewInstanceFactory()
-        )[DetailMovieVModel::class.java]
+        val factory = ViewModelFactory.getInstance(applicationContext)
+        val vModel = ViewModelProvider(this, factory)[DetailMovieVModel::class.java]
 
         val extras = intent.extras
 
@@ -37,7 +37,11 @@ class DetailMovieActivity : AppCompatActivity() {
             val position = extras.getString(EXTRA_POSITION)
             if (movieId != null && position != null) {
                 vModel.setSelectedMovie(movieId, position)
-                setMovie(vModel.getMovie())
+                progress_bar.visibility = View.VISIBLE
+                vModel.getMovie().observe(this, {
+                    progress_bar.visibility = View.GONE
+                    setMovie(it)
+                })
             }
         }
     }

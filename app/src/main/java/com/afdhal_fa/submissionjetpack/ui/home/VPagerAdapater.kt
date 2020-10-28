@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.afdhal_fa.submissionjetpack.model.VPager
 import com.afdhal_fa.submissionjetpack.utils.Constants
+import com.afdhal_fa.submissionjetpack.utils.VPager
 
 
 @Suppress("DEPRECATION")

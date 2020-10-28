@@ -1,10 +1,10 @@
-package com.afdhal_fa.submissionjetpack.model
+package com.afdhal_fa.submissionjetpack.data.source.remote.response
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class MovieEntity(
+data class MovieResponse(
     val id: String,
     val title: String,
     val overview: String,

@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afdhal_fa.submissionjetpack.R
 import com.afdhal_fa.submissionjetpack.ui.home.HomeAdapter
-import com.afdhal_fa.submissionjetpack.ui.home.HomeVModel
 import com.afdhal_fa.submissionjetpack.utils.Constants
+import com.afdhal_fa.submissionjetpack.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_tv_show.*
 
 class TVShowFragment : Fragment() {
@@ -26,19 +26,20 @@ class TVShowFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
 
-            val viewModle = ViewModelProvider(
-                this,
-                ViewModelProvider.NewInstanceFactory()
-            )[HomeVModel::class.java]
+            val factory = ViewModelFactory.getInstance(requireActivity())
+            val viewModle = ViewModelProvider(this, factory)[TVShowVModel::class.java]
 
-            val mTVShows = viewModle.getTVShow()
             val postion = arguments?.getString(Constants.VPAGER_DATA2) as String
-            println(postion)
-
-
             val tvShowAdapter = HomeAdapter()
-            tvShowAdapter.setMovie(mTVShows)
-            tvShowAdapter.setPosition(postion)
+
+            progress_bar.visibility = View.VISIBLE
+            viewModle.getTVShow().observe(viewLifecycleOwner, {
+                progress_bar.visibility = View.GONE
+                tvShowAdapter.setMovie(it)
+                tvShowAdapter.setPosition(postion)
+                tvShowAdapter.notifyDataSetChanged()
+            })
+
 
             with(recycleview_tv_show) {
                 layoutManager = LinearLayoutManager(context)

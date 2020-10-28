@@ -1,40 +1,63 @@
 package com.afdhal_fa.submissionjetpack.ui.detail
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import com.afdhal_fa.submissionjetpack.data.source.MovieRepository
+import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
 import com.afdhal_fa.submissionjetpack.utils.DataDummy
 import junit.framework.Assert.assertEquals
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.verify
+import org.mockito.junit.MockitoJUnitRunner
 
+@RunWith(MockitoJUnitRunner::class)
 class DetailMovieVModelTest {
     private lateinit var viewModel: DetailMovieVModel
-    private val dummyCourse = DataDummy.generateDummyMovie()[0]
-    private val courseId = dummyCourse.id
+    private val dummyMovie = DataDummy.generateDummyMovie()[0]
+    private val movieId = dummyMovie.id
+
+    @get:Rule
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @Mock
+    private lateinit var movieRepository: MovieRepository
+
+    @Mock
+    private lateinit var observer: Observer<MovieEntity>
 
 
     @Before
     fun setUp() {
-        viewModel = DetailMovieVModel()
-        viewModel.setSelectedMovie(courseId, "movies")
+        viewModel = DetailMovieVModel(movieRepository)
+        viewModel.setSelectedMovie(movieId, "movies")
     }
-
 
     @Test
     fun getMovie() {
-        viewModel.setSelectedMovie(dummyCourse.id, "movies")
-        val movieEntity = viewModel.getMovie()
+
+        val movie = MutableLiveData<MovieEntity>()
+        movie.value = dummyMovie
+
+        `when`(movieRepository.getMovieByID(movieId)).thenReturn(movie)
+        val movieEntity = viewModel.getMovie().value as MovieEntity
+        verify(movieRepository).getMovieByID(movieId)
         Assert.assertNotNull(movieEntity)
-        assertEquals(dummyCourse.id, movieEntity.id)
-        assertEquals(dummyCourse.title, movieEntity.title)
-        assertEquals(dummyCourse.overview, movieEntity.overview)
-        assertEquals(dummyCourse.poster, movieEntity.poster)
-        assertEquals(dummyCourse.language, movieEntity.language)
-        assertEquals(dummyCourse.runtime, movieEntity.runtime)
-        assertEquals(dummyCourse.gendre, movieEntity.gendre)
-    }
+        assertEquals(dummyMovie.id, movieEntity.id)
+        assertEquals(dummyMovie.title, movieEntity.title)
+        assertEquals(dummyMovie.overview, movieEntity.overview)
+        assertEquals(dummyMovie.poster, movieEntity.poster)
+        assertEquals(dummyMovie.language, movieEntity.language)
+        assertEquals(dummyMovie.runtime, movieEntity.runtime)
+        assertEquals(dummyMovie.gendre, movieEntity.gendre)
 
-    @Test
-    fun getTVShow() {
-
+        viewModel.getMovie().observeForever(observer)
+        verify(observer).onChanged(dummyMovie)
     }
 }

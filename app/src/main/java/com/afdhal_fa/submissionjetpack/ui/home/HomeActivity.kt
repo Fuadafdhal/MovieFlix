@@ -3,9 +3,9 @@ package com.afdhal_fa.submissionjetpack.ui.home
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.afdhal_fa.submissionjetpack.R
-import com.afdhal_fa.submissionjetpack.model.VPager
 import com.afdhal_fa.submissionjetpack.ui.movie.MovieFragment
 import com.afdhal_fa.submissionjetpack.ui.tv_show.TVShowFragment
+import com.afdhal_fa.submissionjetpack.utils.VPager
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {

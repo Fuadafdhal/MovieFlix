@@ -1,10 +1,11 @@
 package com.afdhal_fa.submissionjetpack.ui.detail
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.afdhal_fa.submissionjetpack.model.MovieEntity
-import com.afdhal_fa.submissionjetpack.utils.DataDummy
+import com.afdhal_fa.submissionjetpack.data.source.MovieRepository
+import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
 
-class DetailMovieVModel : ViewModel() {
+class DetailMovieVModel(private val movieRepository: MovieRepository) : ViewModel() {
 
     private lateinit var movieId: String
     private lateinit var type: String
@@ -14,16 +15,6 @@ class DetailMovieVModel : ViewModel() {
         this.type = type
     }
 
-    fun getMovie(): MovieEntity {
-        lateinit var mMovies: MovieEntity
-        val movieEntities =
-            if (type == "movies") DataDummy.generateDummyMovie() else DataDummy.generateDummyTVShow()
-        for (mMoviesEntity in movieEntities) {
-            if (mMoviesEntity.id == movieId) {
-                mMovies = mMoviesEntity
-            }
-        }
-
-        return mMovies
-    }
+    fun getMovie(): LiveData<MovieEntity> =
+        if (type == "movies") movieRepository.getMovieByID(movieId) else movieRepository.getTVShowByID(movieId)
 }
