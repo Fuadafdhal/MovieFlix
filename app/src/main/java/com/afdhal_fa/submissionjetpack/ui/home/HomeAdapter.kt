@@ -6,17 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.afdhal_fa.submissionjetpack.R
-import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
+import com.afdhal_fa.submissionjetpack.domain.model.Movie
 import com.afdhal_fa.submissionjetpack.ui.detail.DetailMovieActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.items_movie.view.*
 
 class HomeAdapter : RecyclerView.Adapter<HomeAdapter.VHolder>() {
-    private var listMovies = ArrayList<MovieEntity>()
+    private var listMovies = ArrayList<Movie>()
     private lateinit var _Position: String
 
-    fun setMovie(movies: List<MovieEntity>?) {
+    fun setMovie(movies: List<Movie>?) {
         if (movies == null) return
         listMovies.clear()
         listMovies.addAll(movies)
@@ -27,16 +27,14 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.VHolder>() {
     }
 
     inner class VHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(mMovieEntity: MovieEntity) {
-            val imageResource: Int =
-                itemView.resources
-                    .getIdentifier(mMovieEntity.poster, null, itemView.context.packageName)
+        fun bind(mMovie: Movie) {
+            val imageResource: Int = itemView.resources.getIdentifier(mMovie.poster, null, itemView.context.packageName)
 
             with(itemView) {
-                tv_item_title.text = mMovieEntity.title
+                tv_item_title.text = mMovie.title
                 this.setOnClickListener {
                     context.startActivity(Intent(context, DetailMovieActivity::class.java).apply {
-                        putExtra(DetailMovieActivity.EXTRA_ID, mMovieEntity.id)
+                        putExtra(DetailMovieActivity.EXTRA_ID, mMovie.id)
                         putExtra(DetailMovieActivity.EXTRA_POSITION, _Position)
                     })
                 }

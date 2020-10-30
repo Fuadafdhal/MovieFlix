@@ -8,12 +8,11 @@ import com.afdhal_fa.submissionjetpack.utils.Constants
 import com.afdhal_fa.submissionjetpack.utils.VPager
 
 
-@Suppress("DEPRECATION")
 class VPagerAdapater(private val fragment: List<VPager>, fm: FragmentManager) :
     FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
-    var _Data1: String? = null
-    var _Data2: String? = null
+    var dataVPager1: String? = null
+    var dataVPager2: String? = null
 
     override fun getItem(position: Int): Fragment {
         val mBundle = Bundle()
@@ -30,16 +29,16 @@ class VPagerAdapater(private val fragment: List<VPager>, fm: FragmentManager) :
     override fun getCount(): Int = fragment.size
 
     fun setData(data: String) {
-        _Data1 = data
+        dataVPager1 = data
     }
 
     fun setData(data1: String, data2: String) {
-        _Data1 = data1
-        _Data2 = data2
+        dataVPager1 = data1
+        dataVPager2 = data2
     }
 
-    fun getData1(): String? = _Data1
+    fun getData1(): String? = dataVPager1
 
-    fun getData2(): String? = _Data2
+    fun getData2(): String? = dataVPager2
 
 }

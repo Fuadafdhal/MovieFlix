@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.afdhal_fa.submissionjetpack.data.source.MovieRepository
-import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
+import com.afdhal_fa.submissionjetpack.domain.model.Movie
 import com.afdhal_fa.submissionjetpack.utils.DataDummy
 import junit.framework.Assert.assertEquals
 import org.junit.Assert
@@ -30,7 +30,7 @@ class DetailMovieVModelTest {
     private lateinit var movieRepository: MovieRepository
 
     @Mock
-    private lateinit var observer: Observer<MovieEntity>
+    private lateinit var observer: Observer<Movie>
 
 
     @Before
@@ -42,11 +42,11 @@ class DetailMovieVModelTest {
     @Test
     fun getMovie() {
 
-        val movie = MutableLiveData<MovieEntity>()
+        val movie = MutableLiveData<Movie>()
         movie.value = dummyMovie
 
         `when`(movieRepository.getMovieByID(movieId)).thenReturn(movie)
-        val movieEntity = viewModel.getMovie().value as MovieEntity
+        val movieEntity = viewModel.getMovie().value as Movie
         verify(movieRepository).getMovieByID(movieId)
         Assert.assertNotNull(movieEntity)
         assertEquals(dummyMovie.id, movieEntity.id)

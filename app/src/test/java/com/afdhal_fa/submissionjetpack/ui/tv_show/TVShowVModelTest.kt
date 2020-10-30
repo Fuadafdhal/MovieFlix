@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.afdhal_fa.submissionjetpack.data.source.MovieRepository
-import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
+import com.afdhal_fa.submissionjetpack.domain.model.Movie
 import com.afdhal_fa.submissionjetpack.utils.DataDummy
 import org.junit.Assert
 import org.junit.Before
@@ -27,7 +27,7 @@ class TVShowVModelTest {
     private lateinit var movieRepository: MovieRepository
 
     @Mock
-    private lateinit var observer: Observer<List<MovieEntity>>
+    private lateinit var observer: Observer<List<Movie>>
 
     @Before
     fun setup() {
@@ -37,7 +37,7 @@ class TVShowVModelTest {
     @Test
     fun getTVShow() {
         val dummyTVShow = DataDummy.generateDummyMovie()
-        val tvShows = MutableLiveData<List<MovieEntity>>()
+        val tvShows = MutableLiveData<List<Movie>>()
         tvShows.value = dummyTVShow
 
         `when`(movieRepository.getAllTVShow()).thenReturn(tvShows)
