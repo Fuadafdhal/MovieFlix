@@ -18,7 +18,7 @@ class LocalDataSource private constructor(private val mMoviesDao: MovieDao) {
 
     fun getMovieByID(movieID: String): LiveData<MovieEntity> = mMoviesDao.getMoviesByID(movieID)
 
-    fun getTVShowByID(tvShowID: String): LiveData<MovieEntity> = mMoviesDao.getTVShowByID(tvShowID)
+    fun getTVShowByID(tvShowID: String): LiveData<TVShowEntity> = mMoviesDao.getTVShowByID(tvShowID)
 
     fun getAllMoviesFavorite(): LiveData<List<MovieEntity>> = mMoviesDao.getMoviesFavoritre()
 

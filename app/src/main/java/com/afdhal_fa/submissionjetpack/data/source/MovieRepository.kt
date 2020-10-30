@@ -2,6 +2,7 @@ package com.afdhal_fa.submissionjetpack.data.source
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.afdhal_fa.submissionjetpack.data.source.local.LocalDataSource
 import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
 import com.afdhal_fa.submissionjetpack.data.source.local.entity.TVShowEntity
@@ -29,27 +30,30 @@ class MovieRepository private constructor(
     override fun getAllMovie(): LiveData<Resource<List<Movie>>> {
         return object : NetworkBoundResource<List<Movie>, List<MovieResponse>>(appExecutors) {
             override fun loadFromDB(): LiveData<List<Movie>> {
-
                 val result = MutableLiveData<List<Movie>>()
-                val movieList = ArrayList<Movie>()
-                val data = localDataResource.getAllMovies().value
-                for (response in data!!.iterator()) {
-                    val movie = Movie(
-                        response.id,
-                        response.title,
-                        response.overview,
-                        response.poster,
-                        response.language,
-                        response.runtime,
-                        response.gendre,
-                        false,
-                    )
-                    movieList.add(movie)
-                }
+                var arrayData: ArrayList<Movie>
+                Transformations.map(localDataResource.getAllMovies(), {
+                    arrayData = ArrayList()
+                    for (i in it.iterator()) {
+                        val movie = Movie(
+                            i.id,
+                            i.title,
+                            i.overview,
+                            i.poster,
+                            i.language,
+                            i.runtime,
+                            i.gendre,
+                            i.favorite,
+                        )
+                        arrayData.add(movie)
+                    }
+                    result.value = arrayData
+                })
+
                 return result
             }
 
-            override fun shouldFerch(data: List<Movie>?): Boolean = data == null || data.isEmpty()
+            override fun shouldFetch(data: List<Movie>?): Boolean = data == null || data.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<List<MovieResponse>>> = remoteDataSource.getAllMovie()
 
@@ -94,27 +98,30 @@ class MovieRepository private constructor(
     override fun getAllTVShow(): LiveData<Resource<List<Movie>>> {
         return object : NetworkBoundResource<List<Movie>, List<MovieResponse>>(appExecutors) {
             override fun loadFromDB(): LiveData<List<Movie>> {
-
                 val result = MutableLiveData<List<Movie>>()
-                val tvShowList = ArrayList<Movie>()
-                val data = localDataResource.getAllTVShow().value
-                for (response in data!!.iterator()) {
-                    val tvShow = Movie(
-                        response.id,
-                        response.title,
-                        response.overview,
-                        response.poster,
-                        response.language,
-                        response.runtime,
-                        response.gendre,
-                        false,
-                    )
-                    tvShowList.add(tvShow)
-                }
+                var arrayData: ArrayList<Movie>
+                Transformations.map(localDataResource.getAllTVShow(), {
+                    arrayData = ArrayList()
+                    for (i in it.iterator()) {
+                        val movie = Movie(
+                            i.id,
+                            i.title,
+                            i.overview,
+                            i.poster,
+                            i.language,
+                            i.runtime,
+                            i.gendre,
+                            i.favorite,
+                        )
+                        arrayData.add(movie)
+                    }
+                    result.value = arrayData
+                })
+
                 return result
             }
 
-            override fun shouldFerch(data: List<Movie>?): Boolean = data == null || data.isEmpty()
+            override fun shouldFetch(data: List<Movie>?): Boolean = data == null || data.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<List<MovieResponse>>> = remoteDataSource.getAllTVShow()
 

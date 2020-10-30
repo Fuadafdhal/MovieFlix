@@ -26,11 +26,11 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTVShow(tvShows: List<TVShowEntity>)
 
-    @Query("SELECT * FROM tv_show WHERE tvShowId = :movieID")
+    @Query("SELECT * FROM movie WHERE id = :movieID")
     fun getMoviesByID(movieID: String): LiveData<MovieEntity>
 
-    @Query("SELECT * FROM tv_show WHERE tvShowId = :tvShowsID")
-    fun getTVShowByID(tvShowsID: String): LiveData<MovieEntity>
+    @Query("SELECT * FROM tv_show WHERE id = :tvShowsID")
+    fun getTVShowByID(tvShowsID: String): LiveData<TVShowEntity>
 
     @Update
     fun updateMovie(movies: MovieEntity)

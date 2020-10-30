@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "tv_show")
 data class TVShowEntity(
-    @PrimaryKey @NonNull @ColumnInfo(name = "tvShowId") val id: String,
+    @PrimaryKey @NonNull @ColumnInfo(name = "id") val id: String,
 
     @ColumnInfo(name = "title") val title: String,
 
