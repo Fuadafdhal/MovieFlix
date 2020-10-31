@@ -3,10 +3,11 @@ package com.afdhal_fa.submissionjetpack.ui.tv_show
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import com.afdhal_fa.submissionjetpack.data.source.MovieRepository
 import com.afdhal_fa.submissionjetpack.domain.model.Movie
-import com.afdhal_fa.submissionjetpack.utils.DataDummy
 import com.dicoding.academies.vo.Resource
+import junit.framework.Assert.assertEquals
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -28,7 +29,10 @@ class TVShowVModelTest {
     private lateinit var movieRepository: MovieRepository
 
     @Mock
-    private lateinit var observer: Observer<Resource<List<Movie>>>
+    private lateinit var observer: Observer<Resource<PagedList<Movie>>>
+
+    @Mock
+    private lateinit var pagedList: PagedList<Movie>
 
     @Before
     fun setup() {
@@ -37,17 +41,18 @@ class TVShowVModelTest {
 
     @Test
     fun getTVShow() {
-        val dummyTVShow = Resource.success(DataDummy.generateDummyMovie())
-        val tvShows = MutableLiveData<Resource<List<Movie>>>()
-        tvShows.value = dummyTVShow
+        val dummyCourses = Resource.success(pagedList)
+        `when`(dummyCourses.data?.size).thenReturn(5)
+        val courses = MutableLiveData<Resource<PagedList<Movie>>>()
+        courses.value = dummyCourses
 
-        `when`(movieRepository.getAllTVShow()).thenReturn(tvShows)
-        val courseEntities = viewModel.getTVShow().value
-        verify(movieRepository).getAllTVShow()
+        `when`(movieRepository.getAllTVShow()).thenReturn(courses)
+        val courseEntities = viewModel.getTVShow().value?.data
+        verify(movieRepository).getAllMovie()
         Assert.assertNotNull(courseEntities)
-        Assert.assertEquals(10, courseEntities?.data?.size)
+        assertEquals(5, courseEntities?.size)
 
         viewModel.getTVShow().observeForever(observer)
-        verify(observer).onChanged(dummyTVShow)
+        verify(observer).onChanged(dummyCourses)
     }
 }

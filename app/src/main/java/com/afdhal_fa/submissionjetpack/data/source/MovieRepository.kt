@@ -2,6 +2,7 @@ package com.afdhal_fa.submissionjetpack.data.source
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import androidx.paging.PagedList
 import com.afdhal_fa.submissionjetpack.data.source.local.LocalDataSource
 import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
 import com.afdhal_fa.submissionjetpack.data.source.local.entity.TVShowEntity
@@ -27,12 +28,14 @@ class MovieRepository private constructor(
             }
     }
 
-    override fun getAllMovie(): LiveData<Resource<List<Movie>>> {
-        return object : NetworkBoundResource<List<Movie>, List<MovieResponse>>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<Movie>> =
-                Transformations.map(localDataResource.getAllMovies(), { DataMapper.mapMovieEntityToMovie(it) })
+    override fun getAllMovie(): LiveData<Resource<PagedList<Movie>>> {
+        return object : NetworkBoundResource<PagedList<Movie>, List<MovieResponse>>(appExecutors) {
+            override fun loadFromDB(): LiveData<PagedList<Movie>> {
+                return DataMapper.mapMovieEntityToMoviePagedList(localDataResource.getAllMovies())
+            }
 
-            override fun shouldFetch(data: List<Movie>?): Boolean = data == null || data.isEmpty()
+
+            override fun shouldFetch(data: PagedList<Movie>?): Boolean = data == null || data.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<List<MovieResponse>>> = remoteDataSource.getAllMovie()
 
@@ -60,12 +63,13 @@ class MovieRepository private constructor(
         Transformations.map(localDataResource.getMovieByID(movieID), { DataMapper.mapMovieEntityToMovieByID(it) })
 
 
-    override fun getAllTVShow(): LiveData<Resource<List<Movie>>> {
-        return object : NetworkBoundResource<List<Movie>, List<MovieResponse>>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<Movie>> =
-                Transformations.map(localDataResource.getAllTVShow(), { DataMapper.mapTVShowEntityToTVShow(it) })
+    override fun getAllTVShow(): LiveData<Resource<PagedList<Movie>>> {
+        return object : NetworkBoundResource<PagedList<Movie>, List<MovieResponse>>(appExecutors) {
+            override fun loadFromDB(): LiveData<PagedList<Movie>> {
+                return DataMapper.mapTVShowEntityToTVShowPagedList(localDataResource.getAllTVShow())
+            }
 
-            override fun shouldFetch(data: List<Movie>?): Boolean = data == null || data.isEmpty()
+            override fun shouldFetch(data: PagedList<Movie>?): Boolean = data == null || data.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<List<MovieResponse>>> = remoteDataSource.getAllTVShow()
 
@@ -92,11 +96,15 @@ class MovieRepository private constructor(
     override fun getTVShowByID(tvshowID: String): LiveData<Movie> =
         Transformations.map(localDataResource.getTVShowByID(tvshowID), { DataMapper.mapTVShowEntityToTVShowByID(it) })
 
-    override fun getMovieFavorite(): LiveData<List<Movie>> =
-        Transformations.map(localDataResource.getAllMoviesFavorite(), { DataMapper.mapMovieEntityToMovieFavorite(it) })
+    override fun getMovieFavorite(): LiveData<PagedList<Movie>> {
+        return DataMapper.mapMovieEntityToMoviePagedList(localDataResource.getAllMoviesFavorite())
+    }
 
-    override fun getTVShowFavorite(): LiveData<List<Movie>> =
-        Transformations.map(localDataResource.getAllTVShowFavorite(), { DataMapper.mapTVShowEntityToTVShowFavorite(it) })
+
+    override fun getTVShowFavorite(): LiveData<PagedList<Movie>> {
+        return DataMapper.mapTVShowEntityToTVShowPagedList(localDataResource.getAllTVShowFavorite())
+
+    }
 
 
     override fun setFavoriteMovie(movieEntity: MovieEntity, states: Boolean) =

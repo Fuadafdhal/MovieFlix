@@ -38,7 +38,7 @@ class TVShowFragment : Fragment() {
             if (postion == "tv_show_favorite") {
                 viewModle.getTVShowFavorite().observe(viewLifecycleOwner, {
                     progress_bar.visibility = View.GONE
-                    tvShowAdapter.setMovie(it)
+                    tvShowAdapter.submitList(it)
                     tvShowAdapter.setPosition(postion)
                     tvShowAdapter.notifyDataSetChanged()
                 })
@@ -49,7 +49,7 @@ class TVShowFragment : Fragment() {
 
                         Status.SUCCESS -> {
                             progress_bar.visibility = View.GONE
-                            tvShowAdapter.setMovie(it.data)
+                            tvShowAdapter.submitList(it.data)
                             tvShowAdapter.setPosition(postion)
                             tvShowAdapter.notifyDataSetChanged()
                         }
