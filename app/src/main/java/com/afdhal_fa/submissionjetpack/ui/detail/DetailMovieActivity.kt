@@ -1,7 +1,6 @@
 package com.afdhal_fa.submissionjetpack.ui.detail
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -22,11 +21,11 @@ class DetailMovieActivity : AppCompatActivity() {
 
 
     internal lateinit var viewModel: DetailMovieVModel
-    private var menu: Menu? = null
+    private var movie: Movie? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-
 
         val factory = ViewModelFactory.getInstance(applicationContext)
         viewModel = ViewModelProvider(this, factory)[DetailMovieVModel::class.java]
@@ -52,6 +51,8 @@ class DetailMovieActivity : AppCompatActivity() {
                     tv_runtime.visibility = View.VISIBLE
                     tv_genres.visibility = View.VISIBLE
                     setMovie(it)
+                    setStatusFavorite(it.favorite)
+                    movie = it
                 })
             }
         }
@@ -76,7 +77,7 @@ class DetailMovieActivity : AppCompatActivity() {
         tv_genres.text = movie.gendre
 
         fab.setOnClickListener {
-            viewModel.setFavorite()
+            viewModel.setFavorite(movie)
             viewModel.getMovie().observe(this, {
                 setMovie(it)
                 setStatusFavorite(it.favorite)

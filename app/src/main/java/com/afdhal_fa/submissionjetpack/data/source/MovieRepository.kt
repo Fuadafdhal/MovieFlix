@@ -1,7 +1,6 @@
 package com.afdhal_fa.submissionjetpack.data.source
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.afdhal_fa.submissionjetpack.data.source.local.LocalDataSource
 import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
@@ -11,6 +10,7 @@ import com.afdhal_fa.submissionjetpack.data.source.remote.RemoteDataSource
 import com.afdhal_fa.submissionjetpack.data.source.remote.response.MovieResponse
 import com.afdhal_fa.submissionjetpack.domain.model.Movie
 import com.afdhal_fa.submissionjetpack.utils.AppExecutors
+import com.afdhal_fa.submissionjetpack.utils.DataMapper
 import com.dicoding.academies.vo.Resource
 
 class MovieRepository private constructor(
@@ -29,29 +29,8 @@ class MovieRepository private constructor(
 
     override fun getAllMovie(): LiveData<Resource<List<Movie>>> {
         return object : NetworkBoundResource<List<Movie>, List<MovieResponse>>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<Movie>> {
-                val result = MutableLiveData<List<Movie>>()
-                var arrayData: ArrayList<Movie>
-                Transformations.map(localDataResource.getAllMovies(), {
-                    arrayData = ArrayList()
-                    for (i in it.iterator()) {
-                        val movie = Movie(
-                            i.id,
-                            i.title,
-                            i.overview,
-                            i.poster,
-                            i.language,
-                            i.runtime,
-                            i.gendre,
-                            i.favorite,
-                        )
-                        arrayData.add(movie)
-                    }
-                    result.value = arrayData
-                })
-
-                return result
-            }
+            override fun loadFromDB(): LiveData<List<Movie>> =
+                Transformations.map(localDataResource.getAllMovies(), { DataMapper.mapMovieEntityToMovie(it) })
 
             override fun shouldFetch(data: List<Movie>?): Boolean = data == null || data.isEmpty()
 
@@ -77,49 +56,14 @@ class MovieRepository private constructor(
         }.asLiveData()
     }
 
-    override fun getMovieByID(movieID: String): LiveData<Movie> {
-        val result = MutableLiveData<Movie>()
-        localDataResource.getMovieByID(movieID).value?.let { response ->
-            val movie = Movie(
-                response.id,
-                response.title,
-                response.overview,
-                response.poster,
-                response.language,
-                response.runtime,
-                response.gendre,
-                false,
-            )
-            result.postValue(movie)
-        }
-        return result
-    }
+    override fun getMovieByID(movieID: String): LiveData<Movie> =
+        Transformations.map(localDataResource.getMovieByID(movieID), { DataMapper.mapMovieEntityToMovieByID(it) })
+
 
     override fun getAllTVShow(): LiveData<Resource<List<Movie>>> {
         return object : NetworkBoundResource<List<Movie>, List<MovieResponse>>(appExecutors) {
-            override fun loadFromDB(): LiveData<List<Movie>> {
-                val result = MutableLiveData<List<Movie>>()
-                var arrayData: ArrayList<Movie>
-                Transformations.map(localDataResource.getAllTVShow(), {
-                    arrayData = ArrayList()
-                    for (i in it.iterator()) {
-                        val movie = Movie(
-                            i.id,
-                            i.title,
-                            i.overview,
-                            i.poster,
-                            i.language,
-                            i.runtime,
-                            i.gendre,
-                            i.favorite,
-                        )
-                        arrayData.add(movie)
-                    }
-                    result.value = arrayData
-                })
-
-                return result
-            }
+            override fun loadFromDB(): LiveData<List<Movie>> =
+                Transformations.map(localDataResource.getAllTVShow(), { DataMapper.mapTVShowEntityToTVShow(it) })
 
             override fun shouldFetch(data: List<Movie>?): Boolean = data == null || data.isEmpty()
 
@@ -145,63 +89,15 @@ class MovieRepository private constructor(
         }.asLiveData()
     }
 
-    override fun getTVShowByID(tvshowID: String): LiveData<Movie> {
-        val result = MutableLiveData<Movie>()
-        localDataResource.getTVShowByID(tvshowID).value?.let { response ->
-            val movie = Movie(
-                response.id,
-                response.title,
-                response.overview,
-                response.poster,
-                response.language,
-                response.runtime,
-                response.gendre,
-                false,
-            )
-            result.postValue(movie)
-        }
-        return result
-    }
+    override fun getTVShowByID(tvshowID: String): LiveData<Movie> =
+        Transformations.map(localDataResource.getTVShowByID(tvshowID), { DataMapper.mapTVShowEntityToTVShowByID(it) })
 
-    override fun getMovieFavorite(): LiveData<List<Movie>> {
-        val result = MutableLiveData<List<Movie>>()
-        val movieList = ArrayList<Movie>()
-        val data = localDataResource.getAllMoviesFavorite().value
-        for (response in data!!.iterator()) {
-            val movie = Movie(
-                response.id,
-                response.title,
-                response.overview,
-                response.poster,
-                response.language,
-                response.runtime,
-                response.gendre,
-                false,
-            )
-            movieList.add(movie)
-        }
-        return result
-    }
+    override fun getMovieFavorite(): LiveData<List<Movie>> =
+        Transformations.map(localDataResource.getAllMoviesFavorite(), { DataMapper.mapMovieEntityToMovieFavorite(it) })
 
-    override fun getTVShowFavorite(): LiveData<List<Movie>> {
-        val result = MutableLiveData<List<Movie>>()
-        val movieList = ArrayList<Movie>()
-        val data = localDataResource.getAllTVShowFavorite().value
-        for (response in data!!.iterator()) {
-            val movie = Movie(
-                response.id,
-                response.title,
-                response.overview,
-                response.poster,
-                response.language,
-                response.runtime,
-                response.gendre,
-                false,
-            )
-            movieList.add(movie)
-        }
-        return result
-    }
+    override fun getTVShowFavorite(): LiveData<List<Movie>> =
+        Transformations.map(localDataResource.getAllTVShowFavorite(), { DataMapper.mapTVShowEntityToTVShowFavorite(it) })
+
 
     override fun setFavoriteMovie(movieEntity: MovieEntity, states: Boolean) =
         appExecutors.diskIO().execute { localDataResource.setMovieFavorite(movieEntity, states) }

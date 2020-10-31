@@ -51,7 +51,7 @@
         android:visibility="invisible"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_favorite_active"
+        app:srcCompat="@drawable/ic_favorite_unactive"
         app:tint="@color/colorPrimary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

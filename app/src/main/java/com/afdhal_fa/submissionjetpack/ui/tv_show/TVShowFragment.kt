@@ -33,27 +33,35 @@ class TVShowFragment : Fragment() {
 
             val postion = arguments?.getString(Constants.VPAGER_DATA2) as String
             val tvShowAdapter = HomeAdapter()
-
             progress_bar.visibility = View.VISIBLE
-            viewModle.getTVShow().observe(viewLifecycleOwner, {
-                when(it.status) {
-                    Status.LOADING -> progress_bar.visibility = View.VISIBLE
 
-                    Status.SUCCESS -> {
-                        progress_bar.visibility = View.GONE
-                        tvShowAdapter.setMovie(it.data)
-                        tvShowAdapter.setPosition(postion)
-                        tvShowAdapter.notifyDataSetChanged()
+            if (postion == "tv_show_favorite") {
+                viewModle.getTVShowFavorite().observe(viewLifecycleOwner, {
+                    progress_bar.visibility = View.GONE
+                    tvShowAdapter.setMovie(it)
+                    tvShowAdapter.setPosition(postion)
+                    tvShowAdapter.notifyDataSetChanged()
+                })
+            } else {
+                viewModle.getTVShow().observe(viewLifecycleOwner, {
+                    when(it.status) {
+                        Status.LOADING -> progress_bar.visibility = View.VISIBLE
+
+                        Status.SUCCESS -> {
+                            progress_bar.visibility = View.GONE
+                            tvShowAdapter.setMovie(it.data)
+                            tvShowAdapter.setPosition(postion)
+                            tvShowAdapter.notifyDataSetChanged()
+                        }
+                        Status.ERROR -> {
+                            progress_bar.visibility = View.GONE
+                            Toast.makeText(this.context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
+
+                        }
                     }
-                    Status.ERROR -> {
-                        progress_bar.visibility = View.GONE
-                        Toast.makeText(this.context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
 
-                    }
-                }
-
-            })
-
+                })
+            }
 
             with(recycleview_tv_show) {
                 layoutManager = LinearLayoutManager(context)

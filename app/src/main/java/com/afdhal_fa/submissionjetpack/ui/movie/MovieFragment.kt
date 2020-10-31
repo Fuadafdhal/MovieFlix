@@ -28,33 +28,39 @@ class MovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (activity != null) {
-
-
             val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModle = ViewModelProvider(this, factory)[MovieVModel::class.java]
 
             val postion = arguments?.getString(Constants.VPAGER_DATA1) as String
             val movieAdapter = HomeAdapter()
 
-            viewModle.getMovies().observe(viewLifecycleOwner, {
+            if (postion == "movies_favorite") {
+                viewModle.getMoviesFavorite().observe(viewLifecycleOwner, {
+                    progress_bar.visibility = View.GONE
+                    movieAdapter.setMovie(it)
+                    movieAdapter.setPosition(postion)
+                    movieAdapter.notifyDataSetChanged()
+                })
+            } else {
+                viewModle.getMovies().observe(viewLifecycleOwner, {
+                    when(it.status) {
+                        Status.LOADING -> progress_bar.visibility = View.VISIBLE
 
-                when(it.status) {
-                    Status.LOADING -> progress_bar.visibility = View.VISIBLE
+                        Status.SUCCESS -> {
+                            progress_bar.visibility = View.GONE
+                            movieAdapter.setMovie(it.data)
+                            movieAdapter.setPosition(postion)
+                            movieAdapter.notifyDataSetChanged()
 
-                    Status.SUCCESS -> {
-                        progress_bar.visibility = View.GONE
-                        movieAdapter.setMovie(it.data)
-                        movieAdapter.setPosition(postion)
-                        movieAdapter.notifyDataSetChanged()
-
+                        }
+                        Status.ERROR -> {
+                            progress_bar.visibility = View.GONE
+                            Toast.makeText(this.context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
+                        }
                     }
-                    Status.ERROR -> {
-                        progress_bar.visibility = View.GONE
-                        Toast.makeText(this.context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
+                })
+            }
 
-                    }
-                }
-            })
 
             with(recycleview) {
                 layoutManager = LinearLayoutManager(context)

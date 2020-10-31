@@ -8,4 +8,6 @@ import com.dicoding.academies.vo.Resource
 
 class MovieVModel(private val movieRepository: MovieRepository) : ViewModel() {
     fun getMovies(): LiveData<Resource<List<Movie>>> = movieRepository.getAllMovie()
+
+    fun getMoviesFavorite(): LiveData<List<Movie>> = movieRepository.getMovieFavorite()
 }

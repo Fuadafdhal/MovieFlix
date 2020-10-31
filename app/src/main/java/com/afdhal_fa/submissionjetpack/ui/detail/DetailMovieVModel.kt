@@ -3,9 +3,8 @@ package com.afdhal_fa.submissionjetpack.ui.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.afdhal_fa.submissionjetpack.data.source.MovieRepository
-import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
-import com.afdhal_fa.submissionjetpack.data.source.local.entity.TVShowEntity
 import com.afdhal_fa.submissionjetpack.domain.model.Movie
+import com.afdhal_fa.submissionjetpack.utils.DataMapper
 
 class DetailMovieVModel(private val movieRepository: MovieRepository) : ViewModel() {
 
@@ -17,47 +16,17 @@ class DetailMovieVModel(private val movieRepository: MovieRepository) : ViewMode
         this.type = type
     }
 
-    fun getMovie(): LiveData<Movie> = if (type == "movies") movieRepository.getMovieByID(movieId) else movieRepository.getTVShowByID(movieId)
+    fun getMovie(): LiveData<Movie> = if (type == "movies" || type == "movies_favorite") movieRepository.getMovieByID(movieId)
+    else movieRepository.getTVShowByID(movieId)
 
-    fun setFavorite() {
-        val movie = getMovie().value
+    fun setFavorite(movie: Movie?) {
         if (movie != null) {
-            if (type == "movies") {
-                val movieEntity: MovieEntity
-                movie.let {
-                    movieEntity = MovieEntity(
-                        it.id,
-                        it.title,
-                        it.overview,
-                        it.poster,
-                        it.language,
-                        it.runtime,
-                        it.gendre,
-                        it.favorite,
-                    )
-
-                }
-                val newState = movieEntity.favorite
-                movieRepository.setFavoriteMovie(movieEntity, newState)
+            val newState = !movie.favorite
+            if (type == "movies" || type == "movies_favorite") {
+                movieRepository.setFavoriteMovie(DataMapper.mapMovieToMovieEntity(movie), newState)
             } else {
-                val tvShowEntity: TVShowEntity
-                movie.let {
-                    tvShowEntity = TVShowEntity(
-                        it.id,
-                        it.title,
-                        it.overview,
-                        it.poster,
-                        it.language,
-                        it.runtime,
-                        it.gendre,
-                        it.favorite,
-                    )
-
-                }
-                val newState = tvShowEntity.favorite
-                movieRepository.setFavoriteTVShow(tvShowEntity, newState)
+                movieRepository.setFavoriteTVShow(DataMapper.mapTVShowToTVShowEntity(movie), newState)
             }
         }
     }
-
 }

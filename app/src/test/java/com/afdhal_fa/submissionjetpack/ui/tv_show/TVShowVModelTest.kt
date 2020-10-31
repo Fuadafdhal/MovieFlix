@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import com.afdhal_fa.submissionjetpack.data.source.MovieRepository
 import com.afdhal_fa.submissionjetpack.domain.model.Movie
 import com.afdhal_fa.submissionjetpack.utils.DataDummy
+import com.dicoding.academies.vo.Resource
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -27,7 +28,7 @@ class TVShowVModelTest {
     private lateinit var movieRepository: MovieRepository
 
     @Mock
-    private lateinit var observer: Observer<List<Movie>>
+    private lateinit var observer: Observer<Resource<List<Movie>>>
 
     @Before
     fun setup() {
@@ -36,15 +37,15 @@ class TVShowVModelTest {
 
     @Test
     fun getTVShow() {
-        val dummyTVShow = DataDummy.generateDummyMovie()
-        val tvShows = MutableLiveData<List<Movie>>()
+        val dummyTVShow = Resource.success(DataDummy.generateDummyMovie())
+        val tvShows = MutableLiveData<Resource<List<Movie>>>()
         tvShows.value = dummyTVShow
 
         `when`(movieRepository.getAllTVShow()).thenReturn(tvShows)
         val courseEntities = viewModel.getTVShow().value
-        verify<MovieRepository>(movieRepository).getAllTVShow()
+        verify(movieRepository).getAllTVShow()
         Assert.assertNotNull(courseEntities)
-        Assert.assertEquals(10, courseEntities?.size)
+        Assert.assertEquals(10, courseEntities?.data?.size)
 
         viewModel.getTVShow().observeForever(observer)
         verify(observer).onChanged(dummyTVShow)

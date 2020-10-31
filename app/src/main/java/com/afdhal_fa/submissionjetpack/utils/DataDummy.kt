@@ -277,15 +277,37 @@ object DataDummy {
         )
         mMoviesEntity.add(
             MovieResponse(
-                "mTvShow10", "Naruto Shippūden (2007)", "Naruto Shippuuden is the continuation of the original animated TV series Naruto.The story revolves around an older and slightly more matured Uzumaki Naruto and his quest to save his friend Uchiha Sasuke from the grips of the snake-like Shinobi, Orochimaru. After 2 and a half years Naruto finally returns to his village of Konoha, and sets about putting his ambitions to work, though it will not be easy, as He has amassed a few (more dangerous) enemies, in the likes of the shinobi organization; Akatsuki.", "@drawable/poster_naruto_shipudden", "English", "55 m", "Animation, Comedy, Drama"
+                "mTvShow10", "Naruto Shippūden (2007)",
+                "Naruto Shippuuden is the continuation of the original animated TV series Naruto.The story revolves around an older and slightly more matured Uzumaki Naruto and his quest to save his friend Uchiha Sasuke from the grips of the snake-like Shinobi, Orochimaru. After 2 and a half years Naruto finally returns to his village of Konoha, and sets about putting his ambitions to work, though it will not be easy, as He has amassed a few (more dangerous) enemies, in the likes of the shinobi organization; Akatsuki.",
+                "@drawable/poster_naruto_shipudden", "English", "55 m", "Animation, Comedy, Drama"
             )
         )
         mMoviesEntity.add(
             MovieResponse(
-                "mTvShow11", "NCIS (2003)", "From murder and espionage to terrorism and stolen submarines, a team of special agents investigates any crime that has a shred of evidence connected to Navy and Marine Corps personnel, regardless of rank or position.", "@drawable/poster_ncis", "Japanese", "25 m", "Action, Adventure, Crime, Drama"
+                "mTvShow11", "NCIS (2003)",
+                "From murder and espionage to terrorism and stolen submarines, a team of special agents investigates any crime that has a shred of evidence connected to Navy and Marine Corps personnel, regardless of rank or position.",
+                "@drawable/poster_ncis", "Japanese", "25 m", "Action, Adventure, Crime, Drama"
             )
         )
 
         return mMoviesEntity
+    }
+
+
+    //    fun generateRemoteDummyContent(moduleId: String): ContentResponse = ContentResponse(moduleId, "This is a dummy content")
+    //
+    //    fun generateDummyCourseWithModules(course: CourseEntity, bookmarked: Boolean): CourseWithModule {
+    //        course.bookmarked = bookmarked
+    //        return CourseWithModule(course, generateDummyModules(course.courseId))
+    //    }
+
+    //    fun generateDummyContent(moduleId: String): ContentEntity = ContentEntity("This is a dummy content")
+
+    fun generateDummyMovieWithId(): Movie {
+        return generateDummyMovie()[0]
+    }
+
+    fun generateDummyTVShowWithId(): Movie {
+        return generateDummyTVShow()[0]
     }
 }
