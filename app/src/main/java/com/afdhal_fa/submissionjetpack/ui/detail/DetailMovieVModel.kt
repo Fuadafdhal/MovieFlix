@@ -1,11 +1,12 @@
 package com.afdhal_fa.submissionjetpack.ui.detail
 
-import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.afdhal_fa.submissionjetpack.model.MovieEntity
-import com.afdhal_fa.submissionjetpack.utils.DataDummy
+import com.afdhal_fa.submissionjetpack.data.source.MovieRepository
+import com.afdhal_fa.submissionjetpack.domain.model.Movie
+import com.afdhal_fa.submissionjetpack.utils.DataMapper
 
-class DetailMovieVModel : ViewModel() {
+class DetailMovieVModel(private val movieRepository: MovieRepository) : ViewModel() {
 
     private lateinit var movieId: String
     private lateinit var type: String
@@ -15,16 +16,17 @@ class DetailMovieVModel : ViewModel() {
         this.type = type
     }
 
-    fun getMovie(context: Context): MovieEntity {
-        lateinit var mMovies: MovieEntity
-        val movieEntities =
-            if (type.equals("movies")) DataDummy.generateDummyMovie(context) else DataDummy.generateDummyTVShow(context)
-        for (mMoviesEntity in movieEntities) {
-            if (mMoviesEntity.id == movieId) {
-                mMovies = mMoviesEntity
+    fun getMovie(): LiveData<Movie> = if (type == "movies" || type == "movies_favorite") movieRepository.getMovieByID(movieId)
+    else movieRepository.getTVShowByID(movieId)
+
+    fun setFavorite(movie: Movie?) {
+        if (movie != null) {
+            val newState = !movie.favorite
+            if (type == "movies" || type == "movies_favorite") {
+                movieRepository.setFavoriteMovie(DataMapper.mapMovieToMovieEntity(movie), newState)
+            } else {
+                movieRepository.setFavoriteTVShow(DataMapper.mapTVShowToTVShowEntity(movie), newState)
             }
         }
-
-        return mMovies
     }
 }

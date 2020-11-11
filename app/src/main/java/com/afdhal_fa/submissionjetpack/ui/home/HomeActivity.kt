@@ -1,11 +1,13 @@
 package com.afdhal_fa.submissionjetpack.ui.home
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.afdhal_fa.submissionjetpack.R
-import com.afdhal_fa.submissionjetpack.model.VPager
 import com.afdhal_fa.submissionjetpack.ui.movie.MovieFragment
 import com.afdhal_fa.submissionjetpack.ui.tv_show.TVShowFragment
+import com.afdhal_fa.submissionjetpack.utils.VPager
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity() {
@@ -18,8 +20,16 @@ class HomeActivity : AppCompatActivity() {
         pages.add(VPager(getString(R.string.label_tv_show), TVShowFragment()))
 
         val vPagerAdapater = VPagerAdapater(pages, supportFragmentManager)
-        vPagerAdapater.setData("movies", "tv_show")
+        if (intent.getBooleanExtra("favorite", false)) {
+            fab.visibility = View.GONE
+            vPagerAdapater.setData("movies_favorite", "tv_show_favorite")
+        } else {
+            vPagerAdapater.setData("movies", "tv_show")
+        }
         view_pager.adapter = vPagerAdapater
         tabs.setupWithViewPager(view_pager)
+        fab.setOnClickListener {
+            startActivity(Intent(this, HomeActivity::class.java).putExtra("favorite", true))
+        }
     }
 }

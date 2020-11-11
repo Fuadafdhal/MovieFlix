@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afdhal_fa.submissionjetpack.R
 import com.afdhal_fa.submissionjetpack.ui.home.HomeAdapter
-import com.afdhal_fa.submissionjetpack.ui.home.HomeVModel
+import com.afdhal_fa.submissionjetpack.utils.Constants
+import com.afdhal_fa.submissionjetpack.viewmodel.ViewModelFactory
+import com.dicoding.academies.vo.Status
 import kotlinx.android.synthetic.main.fragment_movie.*
 
 class MovieFragment : Fragment() {
@@ -25,20 +28,40 @@ class MovieFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (activity != null) {
+            val factory = ViewModelFactory.getInstance(requireActivity())
+            val viewModle = ViewModelProvider(this, factory)[MovieVModel::class.java]
 
-            val viewModle = ViewModelProvider(
-                this,
-                ViewModelProvider.NewInstanceFactory()
-            )[HomeVModel::class.java]
-
-            val mMovies = viewModle.getMovies(requireContext())
-            val postion = arguments?.getString("VPAGER_DATA1") as String
-            println(postion)
-
-
+            val postion = arguments?.getString(Constants.VPAGER_DATA1) as String
             val movieAdapter = HomeAdapter()
-            movieAdapter.setMovie(mMovies)
-            movieAdapter.setPosition(postion)
+
+            if (postion == "movies_favorite") {
+                viewModle.getMoviesFavorite().observe(viewLifecycleOwner, {
+                    progress_bar.visibility = View.GONE
+                    movieAdapter.submitList(it)
+                    movieAdapter.setPosition(postion)
+                    movieAdapter.notifyDataSetChanged()
+                })
+            } else {
+                viewModle.getMovies().observe(viewLifecycleOwner, {
+                    when(it.status) {
+                        Status.LOADING -> progress_bar.visibility = View.VISIBLE
+
+                        Status.SUCCESS -> {
+                            progress_bar.visibility = View.GONE
+                            movieAdapter.submitList(it.data)
+                            movieAdapter.setPosition(postion)
+                            movieAdapter.notifyDataSetChanged()
+
+                        }
+                        Status.ERROR -> {
+                            progress_bar.visibility = View.GONE
+                            Toast.makeText(this.context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
+            }
+
+
             with(recycleview) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
