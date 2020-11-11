@@ -24,7 +24,6 @@ class FakeMovieRepository(
                 return DataMapper.mapMovieEntityToMoviePagedList(localDataResource.getAllMovies())
             }
 
-
             override fun shouldFetch(data: PagedList<Movie>?): Boolean = data == null || data.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<List<MovieResponse>>> = remoteDataSource.getAllMovie()

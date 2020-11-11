@@ -8,7 +8,7 @@ import com.afdhal_fa.submissionjetpack.data.source.MovieRepository
 import com.afdhal_fa.submissionjetpack.domain.model.Movie
 import com.dicoding.academies.vo.Resource
 import junit.framework.Assert.assertEquals
-import org.junit.Assert
+import junit.framework.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -42,15 +42,15 @@ class TVShowVModelTest {
     @Test
     fun getTVShow() {
         val dummyCourses = Resource.success(pagedList)
-        `when`(dummyCourses.data?.size).thenReturn(5)
+        `when`(dummyCourses.data?.size).thenReturn(10)
         val courses = MutableLiveData<Resource<PagedList<Movie>>>()
         courses.value = dummyCourses
 
         `when`(movieRepository.getAllTVShow()).thenReturn(courses)
         val courseEntities = viewModel.getTVShow().value?.data
-        verify(movieRepository).getAllMovie()
-        Assert.assertNotNull(courseEntities)
-        assertEquals(5, courseEntities?.size)
+        verify(movieRepository).getAllTVShow()
+        assertNotNull(courseEntities)
+        assertEquals(10, courseEntities?.size)
 
         viewModel.getTVShow().observeForever(observer)
         verify(observer).onChanged(dummyCourses)

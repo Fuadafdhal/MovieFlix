@@ -113,7 +113,7 @@ object DataMapper {
 
     fun mapMovieEntityToMoviePagedList(input: DataSource.Factory<Int, MovieEntity>): LiveData<PagedList<Movie>> {
 
-        val config = PagedList.Config.Builder().setEnablePlaceholders(false).setInitialLoadSizeHint(4).setPageSize(4).build()
+        val config = PagedList.Config.Builder().setEnablePlaceholders(false).setInitialLoadSizeHint(10).setPageSize(10).build()
 
         val result = LivePagedListBuilder(input.map {
             Movie(
@@ -127,7 +127,7 @@ object DataMapper {
 
     fun mapTVShowEntityToTVShowPagedList(input: DataSource.Factory<Int, TVShowEntity>): LiveData<PagedList<Movie>> {
 
-        val config = PagedList.Config.Builder().setEnablePlaceholders(false).setInitialLoadSizeHint(4).setPageSize(4).build()
+        val config = PagedList.Config.Builder().setEnablePlaceholders(false).setInitialLoadSizeHint(10).setPageSize(10).build()
 
         val result = LivePagedListBuilder(input.map {
             Movie(
