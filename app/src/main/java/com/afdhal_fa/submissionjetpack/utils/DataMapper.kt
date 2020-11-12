@@ -1,9 +1,5 @@
 package com.afdhal_fa.submissionjetpack.utils
 
-import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
 import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
 import com.afdhal_fa.submissionjetpack.data.source.local.entity.TVShowEntity
 import com.afdhal_fa.submissionjetpack.domain.model.Movie
@@ -111,33 +107,33 @@ object DataMapper {
     }
 
 
-    fun mapMovieEntityToMoviePagedList(input: DataSource.Factory<Int, MovieEntity>): LiveData<PagedList<Movie>> {
-
-        val config = PagedList.Config.Builder().setEnablePlaceholders(false).setInitialLoadSizeHint(10).setPageSize(10).build()
-
-        val result = LivePagedListBuilder(input.map {
-            Movie(
-                id = it.id, title = it.title, overview = it.overview, poster = it.poster, language = it.language, runtime = it.runtime,
-                gendre = it.gendre, favorite = it.favorite
-            )
-        }, config).build()
-
-        return result
-    }
-
-    fun mapTVShowEntityToTVShowPagedList(input: DataSource.Factory<Int, TVShowEntity>): LiveData<PagedList<Movie>> {
-
-        val config = PagedList.Config.Builder().setEnablePlaceholders(false).setInitialLoadSizeHint(10).setPageSize(10).build()
-
-        val result = LivePagedListBuilder(input.map {
-            Movie(
-                id = it.id, title = it.title, overview = it.overview, poster = it.poster, language = it.language, runtime = it.runtime,
-                gendre = it.gendre, favorite = it.favorite
-            )
-        }, config).build()
-
-        return result
-    }
+    //    fun mapMovieEntityToMoviePagedList(input: DataSource.Factory<Int, MovieEntity>): LiveData<PagedList<Movie>> {
+    //
+    //        val config = PagedList.Config.Builder().setEnablePlaceholders(false).setInitialLoadSizeHint(10).setPageSize(10).build()
+    //
+    //        val result = LivePagedListBuilder(input.map {
+    //            Movie(
+    //                id = it.id, title = it.title, overview = it.overview, poster = it.poster, language = it.language, runtime = it.runtime,
+    //                gendre = it.gendre, favorite = it.favorite
+    //            )
+    //        }, config).build()
+    //
+    //        return result
+    //    }
+    //
+    //    fun mapTVShowEntityToTVShowPagedList(input: DataSource.Factory<Int, TVShowEntity>): LiveData<PagedList<Movie>> {
+    //
+    //        val config = PagedList.Config.Builder().setEnablePlaceholders(false).setInitialLoadSizeHint(10).setPageSize(10).build()
+    //
+    //        val result = LivePagedListBuilder(input.map {
+    //            Movie(
+    //                id = it.id, title = it.title, overview = it.overview, poster = it.poster, language = it.language, runtime = it.runtime,
+    //                gendre = it.gendre, favorite = it.favorite
+    //            )
+    //        }, config).build()
+    //
+    //        return result
+    //    }
 
 
 }

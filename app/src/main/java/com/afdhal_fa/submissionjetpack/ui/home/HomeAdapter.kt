@@ -4,8 +4,6 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.afdhal_fa.submissionjetpack.R
 import com.afdhal_fa.submissionjetpack.domain.model.Movie
@@ -13,18 +11,16 @@ import com.afdhal_fa.submissionjetpack.ui.detail.DetailMovieActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.items_movie.view.*
+import java.util.*
 
-class HomeAdapter internal constructor() : PagedListAdapter<Movie, HomeAdapter.VHolder>(DIFF_CALLBACK) {
-    companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Movie>() {
-            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-                return oldItem.id == newItem.id
-            }
+class HomeAdapter : RecyclerView.Adapter<HomeAdapter.VHolder>() {
 
-            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-                return oldItem == newItem
-            }
-        }
+    private var listMovie = ArrayList<Movie>()
+
+    fun setMovies(movie: List<Movie>?) {
+        if (movie == null) return
+        this.listMovie.clear()
+        this.listMovie.addAll(movie)
     }
 
     private lateinit var _Position: String
@@ -40,10 +36,8 @@ class HomeAdapter internal constructor() : PagedListAdapter<Movie, HomeAdapter.V
     }
 
     override fun onBindViewHolder(holder: VHolder, position: Int) {
-        val movie = getItem(position)
-        if (movie != null) {
-            holder.bind(movie)
-        }
+        val movie = listMovie[position]
+        holder.bind(movie)
     }
 
     inner class VHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -65,4 +59,6 @@ class HomeAdapter internal constructor() : PagedListAdapter<Movie, HomeAdapter.V
             }
         }
     }
+
+    override fun getItemCount() = listMovie.size
 }

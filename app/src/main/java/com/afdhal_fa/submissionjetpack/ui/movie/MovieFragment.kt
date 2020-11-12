@@ -37,7 +37,7 @@ class MovieFragment : Fragment() {
             if (postion == "movies_favorite") {
                 viewModle.getMoviesFavorite().observe(viewLifecycleOwner, {
                     progress_bar.visibility = View.GONE
-                    movieAdapter.submitList(it)
+                    movieAdapter.setMovies(it)
                     movieAdapter.setPosition(postion)
                     movieAdapter.notifyDataSetChanged()
                 })
@@ -48,7 +48,7 @@ class MovieFragment : Fragment() {
 
                         Status.SUCCESS -> {
                             progress_bar.visibility = View.GONE
-                            movieAdapter.submitList(it.data)
+                            movieAdapter.setMovies(it.data)
                             movieAdapter.setPosition(postion)
                             movieAdapter.notifyDataSetChanged()
 

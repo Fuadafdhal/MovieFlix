@@ -3,9 +3,9 @@ package com.afdhal_fa.submissionjetpack.ui.movie
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.paging.PagedList
 import com.afdhal_fa.submissionjetpack.data.source.MovieRepository
 import com.afdhal_fa.submissionjetpack.domain.model.Movie
+import com.afdhal_fa.submissionjetpack.utils.DataDummy
 import com.dicoding.academies.vo.Resource
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
@@ -30,10 +30,10 @@ class MovieVModelTest {
     private lateinit var movieRepository: MovieRepository
 
     @Mock
-    private lateinit var observer: Observer<Resource<PagedList<Movie>>>
+    private lateinit var observer: Observer<Resource<List<Movie>>>
 
     @Mock
-    private lateinit var pagedList: PagedList<Movie>
+    private lateinit var observerFavorite: Observer<List<Movie>>
 
     @Before
     fun setup() {
@@ -42,9 +42,8 @@ class MovieVModelTest {
 
     @Test
     fun getMovies() {
-        val dummyCourses = Resource.success(pagedList)
-        `when`(dummyCourses.data?.size).thenReturn(10)
-        val courses = MutableLiveData<Resource<PagedList<Movie>>>()
+        val dummyCourses = Resource.success(DataDummy.generateDummyMovie())
+        val courses = MutableLiveData<Resource<List<Movie>>>()
         courses.value = dummyCourses
 
         `when`(movieRepository.getAllMovie()).thenReturn(courses)
@@ -56,4 +55,22 @@ class MovieVModelTest {
         viewModel.getMovies().observeForever(observer)
         verify(observer).onChanged(dummyCourses)
     }
+
+
+    @Test
+    fun getMoviesFavorite() {
+        val dummyCourses = DataDummy.generateDummyMovie()
+        val courses = MutableLiveData<List<Movie>>()
+        courses.value = dummyCourses
+
+        `when`(movieRepository.getMovieFavorite()).thenReturn(courses)
+        val courseEntities = viewModel.getMoviesFavorite().value
+        verify(movieRepository).getMovieFavorite()
+        assertNotNull(courseEntities)
+        assertEquals(10, courseEntities?.size)
+
+        viewModel.getMoviesFavorite().observeForever(observerFavorite)
+        verify(observerFavorite).onChanged(dummyCourses)
+    }
+
 }

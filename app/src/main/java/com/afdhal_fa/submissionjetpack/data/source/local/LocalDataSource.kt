@@ -1,7 +1,6 @@
 package com.afdhal_fa.submissionjetpack.data.source.local
 
 import androidx.lifecycle.LiveData
-import androidx.paging.DataSource
 import com.afdhal_fa.submissionjetpack.data.source.local.entity.MovieEntity
 import com.afdhal_fa.submissionjetpack.data.source.local.entity.TVShowEntity
 import com.afdhal_fa.submissionjetpack.data.source.local.room.MovieDao
@@ -13,17 +12,17 @@ class LocalDataSource private constructor(private val mMoviesDao: MovieDao) {
         fun getInstance(movieDao: MovieDao): LocalDataSource = INSTANCE ?: LocalDataSource(movieDao)
     }
 
-    fun getAllMovies(): DataSource.Factory<Int, MovieEntity> = mMoviesDao.getMovies()
+    fun getAllMovies(): LiveData<List<MovieEntity>> = mMoviesDao.getMovies()
 
-    fun getAllTVShow(): DataSource.Factory<Int, TVShowEntity> = mMoviesDao.getTVShow()
+    fun getAllTVShow(): LiveData<List<TVShowEntity>> = mMoviesDao.getTVShow()
 
     fun getMovieByID(movieID: String): LiveData<MovieEntity> = mMoviesDao.getMoviesByID(movieID)
 
     fun getTVShowByID(tvShowID: String): LiveData<TVShowEntity> = mMoviesDao.getTVShowByID(tvShowID)
 
-    fun getAllMoviesFavorite(): DataSource.Factory<Int, MovieEntity> = mMoviesDao.getMoviesFavoritre()
+    fun getAllMoviesFavorite(): LiveData<List<MovieEntity>> = mMoviesDao.getMoviesFavoritre()
 
-    fun getAllTVShowFavorite(): DataSource.Factory<Int, TVShowEntity> = mMoviesDao.getTVShowFavoritre()
+    fun getAllTVShowFavorite(): LiveData<List<TVShowEntity>> = mMoviesDao.getTVShowFavoritre()
 
     fun insertMovie(movie: List<MovieEntity>) = mMoviesDao.insertMovie(movie)
 
